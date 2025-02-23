@@ -40,6 +40,12 @@ export class ProfileReviewer {
         AI_RESPONSE: 'Invalid AI Response',
     }
 
+    async runBatch(githubUsernames: string[], criteria: string, concurrency: number = 1) {
+        const limit = pLimit(concurrency);
+        return await Promise.all(githubUsernames.map((githubUsername) => limit(() => this.run(githubUsername, criteria))));
+    }
+
+
     async run(githubUsername: string, criteria: string): Promise<ProfileReview | null> {
         const page = await this.browser.newPage();
         const PROFILES_DIR = 'profiles';
@@ -69,6 +75,8 @@ export class ProfileReviewer {
             }
         }
     }
+
+
     
 
     profileReviewPrompt (criteria: string){
