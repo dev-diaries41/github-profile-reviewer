@@ -5,8 +5,6 @@
 ## **Table of Contents**  
 - [Installation](#installation)  
 - [Usage](#usage)  
-- [Configuration](#configuration)  
-- [How It Works](#how-it-works)  
 - [Example Output](#example-output)  
 
 ## **Installation**  
@@ -25,31 +23,28 @@
 
 ## **Usage**  
 
-You can use the tool by calling the `review` function as shown below:  
+You can use the tool by calling the `review` or `reviewBatch` functions as shown below:  
 
 ```typescript
-import { review } from "./src";
+import { review, reviewBatch, ProfileReviewer } from "./src";
+import dotenv from "dotenv";
+dotenv.config();
 
-(async () => {
+(async() => {
+    const openaiApiKey = process.env.OPENAI_API_KEY!;
+    const criteria = "A full stack developer with experience building scalable web apps using typescript/javascript";
+
+    // Single profile review
     const githubUsername = "dev-diaries41";
-    const criteria = "A full stack developer with experience building scalable web apps using TypeScript/JavaScript";
+    const singleReview = await review(githubUsername, criteria, openaiApiKey)
+    console.log("Single Profile Review:", singleReview);
 
-    await review({ githubUsername, criteria });
+    // Batch profile review
+    const githubUsernames = ["dev-diaries41", "janeDoe", "johnSmith"];
+    const batchReview = await reviewBatch(githubUsernames, criteria, openaiApiKey, 2); // Concurrency set to 2
+    console.log("Batch Profile Reviews:", batchReview);
 })();
 ```
-
-## **Configuration**  
-
-- **GitHub Username**: The username of the candidate whose profile will be analyzed.  
-- **Criteria**: The job requirements that the candidate’s profile will be evaluated against.  
-
-## **How It Works**  
-
-1. Opens a Puppeteer browser session.  
-2. Navigates to the candidate"s GitHub profile.  
-3. Captures relevant data (e.g., pinned repositories, tech stack).  
-4. Analyzes the profile based on the provided job criteria.  
-5. Returns a structured summary candidate’s suitability.  
 
 ## **Example Output**  
 
