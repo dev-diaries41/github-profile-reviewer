@@ -1,7 +1,6 @@
-import  { Browser, Page } from "puppeteer";
+import  { Browser, LaunchOptions, Page } from "puppeteer";
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
-import {  ScrapeJobParams } from "./types";
 import { getRandomUserAgent } from "./utils/helpers";
 import pLimit from "p-limit";
 import fs from "fs"
@@ -13,7 +12,7 @@ import { generateJsonFromImg } from "./utils/ai";
 
 puppeteer.use(StealthPlugin());
 
-const launchOpts = { 
+const launchOpts: LaunchOptions  = { 
     headless: false,
 }
 
@@ -63,8 +62,6 @@ export class ProfileReviewer {
             const profilePath = `${PROFILES_DIR}/profile-${githubUsername}.png`;
             await page.screenshot({ type: 'png', path: profilePath });    
             await page.close();
-    
-            // Process the screenshot separately
             return await this.reviewProfile(profilePath, criteria);
         } catch (error: any) {
             console.error('Reviewer error', { githubUsername, details: error?.message || '' });
@@ -75,9 +72,6 @@ export class ProfileReviewer {
             }
         }
     }
-
-
-    
 
     profileReviewPrompt (criteria: string){
         return  `
@@ -109,9 +103,7 @@ export class ProfileReviewer {
             if (!res || typeof (res?.isMatch) !== 'boolean') throw new Error(ProfileReviewer.errors.AI_RESPONSE);
             return res; 
         } finally {
-            await Promise.all([
-                deleteFile(profilePath),
-            ])
+            await deleteFile(profilePath);
         }
     }
 
