@@ -28,3 +28,9 @@ export interface GenerateJSONParams extends  OpenaiChatParams{
     responseFormat: ResponseFormatJSONSchema;
     opts?: Omit<Partial<ChatCompletionCreateParamsBase>, 'stream'>;
 }
+
+export interface ReviewParams { 
+    githubUsername: string, 
+    criteria: string, 
+    openaiApiKey: string 
+}

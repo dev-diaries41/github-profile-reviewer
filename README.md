@@ -22,10 +22,6 @@
    npm install
    ```
 
-3. **Run the script**  
-   ```sh
-   npm start
-   ```
 
 ## **Usage**  
 
